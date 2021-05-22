@@ -38,7 +38,7 @@ parser.add_argument('-f', '--force-retrain', action='store_true',
                          ' even if there is an applicable model in the permanency folder')
 parser.add_argument('-o', '--out-file', type=str,
                     help='the file to write the predictions to. '
-                         'Has no effect if -i is not specified', default=sys.stdout)
+                         'Has no effect if -i is not specified', default='results.csv')
 if argcomplete_available:
     argcomplete.autocomplete(parser)
 args = parser.parse_args()

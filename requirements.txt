@@ -1,0 +1,4 @@
+numpy~=1.21.0
+pandas~=1.2.5
+argcomplete~=1.12.3
+tensorflow~=2.5.0

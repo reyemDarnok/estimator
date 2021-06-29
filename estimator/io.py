@@ -1,5 +1,7 @@
-import pandas as pd
+from collections import Counter
 
+import pandas as pd
+import numpy as np
 
 def read_file(filename, args):
     dtypes = {'crop': 'string', 'Timing': 'string', 'TDS': 'string', 'TSCF': 'string', 'Scenario': 'string',
@@ -38,5 +40,11 @@ def parse_input(model, args):
     if 'Result' in input_data:
         input_data.pop('Result')
     predictions = model.predict(input_data).flatten()
-    input_data['Result'] = predictions
+    low = args.borders[0]
+    for index, high in enumerate(args.borders):
+        if low == high:
+            input_data[f'x < {low}'] = predictions[index]
+            continue
+        input_data[f'{low} <= x < {high}'] = predictions[index]
+    input_data[f'{args.borders[len(args.borders) - 1]} < x'] = predictions[len(args.borders)]
     input_data.to_csv(args.out_file, index=False)

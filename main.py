@@ -100,45 +100,11 @@ def read_file(filename):
     dtypes = {'crop': 'string', 'Timing': 'string', 'TDS': 'string', 'TSCF': 'string', 'Scenario': 'string', 'DT50': 'float64', 'KOC': 'float64', 'Freundlich': 'float64', 'Result': 'float64', 'Day': 'float64', 'Month': 'float64'}
     dataframe = pd.read_csv(filename, dtype=dtypes, na_values=['Na'])
     dataframe.drop(dataframe[dataframe.Result == NaN].index, inplace=True)
-    dataframe.crop = pd.to_numeric(dataframe.crop.astype('category'), errors='coerce')
-    dataframe.Timing = pd.to_numeric(dataframe.Timing.astype('category'), errors='coerce')
-    dataframe.TDS = pd.to_numeric(dataframe.TDS.astype('category'), errors='coerce')
-    dataframe.TSCF = pd.to_numeric(dataframe.TSCF.astype('category'), errors='coerce')
-    dataframe.Scenario = pd.to_numeric(dataframe.Scenario.astype('category'), errors='coerce')
-    crops = pd.Series([
-        'apples',
-        'maize',
-        'veggy',
-    ], dtype='category')
-    timings = pd.Series([
-        'early',
-        'mid',
-        'late',
-    ], dtype='category')
-    tds = pd.Series([
-        'off',
-        'on',
-    ], dtype='category')
-    tscf = pd.Series([
-        'off',
-        'on',
-    ], dtype='category')
-    scenarios = pd.Series([
-        'Chat',
-        'Hamb',
-        'Joki',
-        'Krems',
-        'Okeh',
-        'Piac',
-        'Port',
-        'Sevi',
-        'Thiv',
-    ], dtype='category')
-    # dataframe['crop'] = dataframe['crop'].apply(lambda x: x if x is int or x is float else crops.index(x))
-    # dataframe['Timing'] = dataframe['Timing'].apply(lambda x: x if x is int or x is float else timings.index(x))
-    # dataframe['TDS'] = dataframe['TDS'].apply(lambda x: x if x is int or x is float else tds.index(x))
-    # dataframe['TSCF'] = dataframe['TSCF'].apply(lambda x: x if x is int or x is float else tscf.index(x))
-    # dataframe['Scenario'] = dataframe['Scenario'].apply(lambda x: x if x is int or x is float else scenarios.index(x))
+    dataframe.crop = dataframe.crop.astype('category').cat.codes.astype('float')
+    dataframe.Timing = dataframe.Timing.astype('category').cat.codes.astype('float')
+    dataframe.TDS = dataframe.TDS.astype('category').cat.codes.astype('float')
+    dataframe.TSCF = dataframe.TSCF.astype('category').cat.codes.astype('float')
+    dataframe.Scenario = dataframe.Scenario.astype('category').cat.codes.astype('float')
     return dataframe
 
 

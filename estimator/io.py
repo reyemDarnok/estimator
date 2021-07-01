@@ -37,14 +37,21 @@ def categorize_function(borders):
 
 def parse_input(model, args):
     input_data = read_file(args.input_file, args)
+    result = None
     if 'Result' in input_data:
-        input_data.pop('Result')
-    predictions = model.predict(input_data).flatten()
+        result = input_data.pop('Result')
+    predictions = model.predict(input_data)
+    if result is not None:
+        input_data['Result'] = result
     low = args.borders[0]
+    column_names = []
     for index, high in enumerate(args.borders):
         if low == high:
-            input_data[f'x < {low}'] = predictions[index]
+            column_names.append(f'x < {low}')
             continue
-        input_data[f'{low} <= x < {high}'] = predictions[index]
-    input_data[f'{args.borders[len(args.borders) - 1]} < x'] = predictions[len(args.borders)]
+        column_names.append(f'{low} <= x < {high}')
+        low = high
+    column_names.append(f'{args.borders[len(args.borders) - 1]} <= x')
+    predictions_df = pd.DataFrame(data=predictions, columns=column_names)
+    input_data = pd.merge(input_data, predictions_df, left_index=True, right_index=True)
     input_data.to_csv(args.out_file, index=False)
